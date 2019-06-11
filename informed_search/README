@@ -1,0 +1,19 @@
+THE PANCAKE PROBLEM - OVERVIEW
+Stack of pancakes, size of each is each element in stack: [3, 4, 2, 1, 5]
+								pancake in 0th position (size = 1) is bottom 
+								of the stack, pancake in 4th position is 
+								top of stack.
+Action: Inserting spatula at certain location flips all pancakes above.
+Goal: stack arrangement, [5, 4, 3, 2, 1]
+
+
+Searching problem: 
+			Initial state; any configuration
+			Possible actions; reversing all pancakes above position n out of 
+			                  n - 1 possible positions (4 slots between 5 pancakes)
+			Successor function; 
+			Goal test; if the sum of the gaps between 5 pancakes is 4 and the 
+			           pancaked in the 0th position is the biggest; 
+			           Thus, stack[0] = max(stack)
+			Path cost function; 
+Cost function: The number of pancakes flipped above a certain inserted position
