@@ -25,6 +25,8 @@ import operator
 NUM_ITEMS = 7
 WEIGHT_THRESHOLD = 120
 BASE_SCORE = 10
+GENERATION_X = 24
+SIZE_OF_SEARCH_SPACE = 40
 
 
 class item: 
@@ -33,7 +35,7 @@ class item:
         self.value = value
         self.name =  name + ";     " + "Weight: " + str(self.weight) + " Value: " + str(self.value)
 
-class individual: 
+class Individual: 
     def __init__(self, items, rank, fitness):
         self.items = items
         self.rank = rank
@@ -65,6 +67,11 @@ ALL_ITEMS = [item_1, item_2, item_3, item_4, item_5, item_6, item_7]
                 Individual is a tuple of objects
 """
 def print_individual(individual):
+    
+    if (type(individual) == int): 
+        print ("Sorry, there's no individual here.")
+        return
+
     print (" ---- This is an individual ----")
     ans = "\n"
     size_of_individual = len(individual.items)
@@ -106,19 +113,38 @@ def print_individual(individual):
     Arguements: Takes an individual - global_space[10]
                 Individual is a tuple of objects
 """
-def fitness(individual):
-    size_of_individual = len(individual.items)
+def fitness(indi):
+    if (type(indi) == int): return
+    size_of_individual = len(indi.items)
+    total_weight = 0
     total_value = 0
+    normalizer = 10
     for idx in range(size_of_individual):
-        total_value += individual.items[idx].value
-        
-    score = BASE_SCORE * total_value / GOAL_VALUE
-    
-    if score < BASE_SCORE:
-        score = BASE_SCORE - (score - BASE_SCORE)
-        
-    return score
+        if (type(individual.items[idx]) == int): continue
+        total_weight += (indi.items)[idx].weight
+        total_value += indi.items[idx].value
+      
+    if total_weight > WEIGHT_THRESHOLD:
+        score = 0
+    else: 
+        score = 5
+      
+    return score + (total_value/normalizer)
 
+
+""" Name: cull
+    Description: Culls population by given percentage
+    Returns: New population
+""" 
+def cull(population, percent):
+    
+    border = int(len(population) * percent * 0.01)
+    print ("THIS IS BORDER: " + str(border))
+    for member in population: 
+        if population.index(member) > border: 
+            population[population.index(member)] = 0
+            
+   
 """
     Name: cross_over
     Description: swaps out half of an individuals genes with another individuals
@@ -132,18 +158,18 @@ def cross_over(individual_a, individual_b):
     counter = 0
     end = 7
     
-    for ele in individual_a.items:
-        offspring_items.append(individual_a.items)
+    for item in individual_a.items:
+        offspring_items.append(item)
         if counter == idx_swap - 1:
             break
-        counter += 0;
+        counter += 1;
         
-    for ele in individual_b.items:
+    for item in individual_b.items:
         if counter < end:
-            offspring_items.append(individual_b.items)
+            offspring_items.append(item)
         counter += 1;
     
-    offspring = individual(offspring_items, 0, 0)
+    offspring = Individual(offspring_items, 0, 0)
     return offspring
    
 """
@@ -153,58 +179,80 @@ def cross_over(individual_a, individual_b):
                  the most suitable item
     Returns: new offspring
 """
-def mutation(individual):
-
+def mutation(member):
+    
     weight = 0
     weight_list = []
-    for idx in range(len(individual.items)):
-        weight += individual.items[idx].weight
-        weight_list.append(individual.items[idx].weight)
-    max_weight = max(weight_list)
     
-    if weight > 120: 
+    if (type(member) == int): return
+    
+    for idx in range(len(member.items)):
+        if (type(member.items[idx]) == int): continue
+        weight += member.items[idx].weight
+        weight_list.append(member.items[idx].weight)
+        
+
+    if len(weight_list) == 0: 
+        member.items[random.choice(ITEMS_IDX)] =  random.choice(ALL_ITEMS)
+        return
+    
+    max_weight = max(weight_list)
+
+    if weight > 120: #Discard heaviest item
         rem_idx = weight_list.index(max_weight)
-        individual.items[rem_idx] = 0
+        member.items[rem_idx] = 0
+        
     else:
+        
         fill = WEIGHT_THRESHOLD - weight
+        #Check distance from threshold, to select item to add. 
+        
         if fill <= 20:
-            fill_index = individual.items.index(0)
             
-            member = individual(ALL_ITEMS[0], 0, 0)
-            individual.items[fill_index] = member
+            fill_index = member.items.index(0)
+            item_to_add = ALL_ITEMS[0]
+            member.items[fill_index] =  item_to_add
+            
             
         elif fill > 20 and fill <= 30:
-            fill_index = individual.items.index(0)
-            possible_items = [1, 6]
-            member = individual(ALL_ITEMS[random.choice(possible_items)], 0, 0)
-            individual.items[fill_index] = member
+            
+            fill_index = member.items.index(0)
+            
+            possible_items = [1, 6] #Random choice between 2 items of weight = 30
+            item_no = random.choice(possible_items)
+            item_to_add = ALL_ITEMS[item_no]
+            item_to_add.name = "Item_" + str(item_no)
+            member.items[fill_index] = item_to_add
+            
             
         elif fill >= 50 and fill < 60:
-            fill_index = individual.items.index(0)
             
-            member = individual(ALL_ITEMS[4], 0, 0)
-            individual.items[fill_index] = member
+            fill_index = member.items.index(0)
+            item_to_add = ALL_ITEMS[4]
+            member.items[fill_index] = member
+            
             
         elif fill >= 60 and fill < 70:
-            fill_index = individual.items.index(0)
             
-            member = individual(ALL_ITEMS[2], 0, 0)
-            individual.items[fill_index] = member
+            fill_index = member.items.index(0)
+            item_to_add = ALL_ITEMS[2]
+            member.items[fill_index] = member
+            
             
         elif fill >= 70 and fill < 90:
-            fill_index = individual.items.index(0)
             
-            member = individual(ALL_ITEMS[5], 0, 0)
-            individual.items[fill_index] = member
+            fill_index = member.items.index(0)
+            item_to_add = ALL_ITEMS[5]
+            member.items[fill_index] = item_to_add
             
         elif fill >= 90:
-            fill_index = individual.items.index(0)
             
-            member = individual(ALL_ITEMS[3], 0, 0)
-            individual.items[fill_index] = member
+            fill_index = member.items.index(0)
+            item_to_add = ALL_ITEMS[3]
+            member.items[fill_index] = item_to_add
             
-        
     
+
     
 """Global space - 
             Initial base to pick individuals for evolution for.
@@ -216,7 +264,7 @@ def mutation(individual):
 """
 if __name__ == "__main__":
     global_space = [] #Search_space, gets updated 
-    
+    search_space = [] #Randomly selects 40 individuals from global_space
     """Initial population"""
     
     for i in range(1, NUM_ITEMS+1):
@@ -232,27 +280,79 @@ if __name__ == "__main__":
                 if items_idx_list[j] > 0:
                     item_list[j] = ALL_ITEMS[j]
                     
-            member = individual(item_list, 0, 0)#Put member in global_space
+            member = Individual(item_list, 0, 0)#Put member in global_space
             global_space.append(member)
-            break
-    print_individual(global_space[6])
-    mutation(global_space[6])
-    #evolving = True
     
-    
+    for idx in range(SIZE_OF_SEARCH_SPACE):
+        search_space.append(random.choice(global_space))
         
-        #"""Cross-over"""
-        
-       # """Mutation"""
-
-    
-        #pop_fitness = [] #Population in order of descending fitness
-        #for individual in global_space:
+    """Mutation test"""
+    #print_individual(global_space[6])
+    #mutation(global_space[6])
+    #print ("After MUTATION")
+    #print_individual(global_space[6])
+    """Cross-over test"""
+    #child = cross_over(global_space[30], global_space[4])
+    #print ("Parent 1")
+    #print_individual (global_space[3])
+    #print ("Parent 2")
+    #print_individual (global_space[4])
+    #print ("Offspring")
+    #print_individual (child)
+ 
+    generation = 0 
+    evolving = True
+    while evolving and generation != GENERATION_X: 
+        """Assign fitness to population"""
+        for individual in search_space: 
+            if (type(individual) == int): continue
+            individual.fitness = fitness(individual)
             
-       #     
-       # """Cull population"""
-    #
-    #print(fitness(test_individual))
+        #print_individual(global_space[6])
+        """Sort by order of fitness"""    
+        search_space = sorted(search_space, key=operator.attrgetter('fitness'))
+        
+        #print_individual(global_space[6])
+        """Rank population"""
+        for idx in range(len(search_space)):
+            search_space[idx].rank = len(search_space) - idx
+        #Population now ordered from fittest to weakest
+        search_space.reverse()
+        #print_individual(global_space[0])
+        print (generation)
+     
+        """Cull lower half of population"""
+        cull_rate = 50
+        cull(search_space, cull_rate)
+        
+        #print_individual(global_space[63])
+        
+        """Reproduction - 
+                    Crossover 70% of the time. 
+                    Mutate all the time and only 30% of population.
+        """
+     
     
-
-
+        to_cross = random.choice([1,2,3,4,5,6,7,8,9,10])
+        if to_cross <= 7:
+            print ("HERE")
+            while True:
+                try: search_space.index(0)
+                except ValueError: break
+                parenta_idx = random.randint(0, 20)
+                parentb_idx = random.randint(0, 20)
+                offspring = cross_over(search_space[parenta_idx], search_space[parentb_idx])
+                search_space[search_space.index(0)] = offspring
+                
+        print ("First of zeros:" + str(search_space.index(0)))
+        #Mutation
+        mutation_population = []
+        portion_to_mutate = int(len(search_space) * 0.3)
+        for idx in range(portion_to_mutate):
+            mut_idx = random.randint(0, len(search_space)-1)
+            mutation_population.append(mut_idx)
+        for index in mutation_population: 
+            mutation(search_space[index])
+            if (search_space[index]) == 0: print ("Holla")
+        
+        generation += 1
