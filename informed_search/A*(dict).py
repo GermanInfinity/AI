@@ -62,6 +62,10 @@ if __name__ == "__main__":
     working_stack = [4, 2, 3, 1, 5]
     frontier = []
     visited = []
+    frontier.append({"child": working_stack, "cost": forward_cost(working_stack)})
+    visited.append({"child": working_stack, "cost": forward_cost(working_stack)})
+
+    
 
     
     not_found = True
@@ -72,42 +76,63 @@ if __name__ == "__main__":
         
         for idx in range(1, flip_num+1):
             flip_return = flip(working_stack, idx)
-            backward_cost = idx        
-            child = Pancake_stack(flip_return, 
-                                forward_cost(flip_return) + backward_cost)
+            backward_cost = idx  
             
-            if child not in frontier: frontier.append(child)
-            if child not in visited: frontier.append(child)
+            child = flip_return
+            cost = forward_cost(flip_return) + backward_cost
             
-            if child in frontier:
-                child_in_frontier = frontier[(frontier.index(child))] 
-                if child_in_frontier.cost > child.cost: 
-                    frontier[(frontier.index(child))] = child
-                
-        
+            
+            child_in_frontier = False
+            child_in_visited = False
+            
+            for idx in range(len(frontier)): #Checking all of frontier for child  
+                if frontier[idx]['child'] == child:
+                    child_in_frontier = True
+
+                if idx == len(frontier)-1 and child_in_frontier == False: 
+                    frontier.append({"child": flip_return, "cost": cost})
+                    
+            for idx in range(len(visited)): #Checking all of visited for child  
+                if visited[idx]['child'] == child:
+                    child_in_visited = True
+
+                if idx == len(visited)-1 and child_in_visited == False: 
+                    frontier.append({"child": flip_return, "cost": cost})
+                                
+            for element in frontier: 
+                if element['child'] == child and element['cost'] > cost:
+                    replace_child = {"child": flip_return, "cost": cost}
+                    frontier[frontier.index(element)] = {"child": flip_return, "cost": cost}
+                    
+        if count == 1: del frontier[0] #Delete the initial state
+                    
         if len(frontier) == 0: 
             print ("Failure")
             break 
+
+        #print (frontier)
+        frontier = sorted(frontier, key = lambda i:i['cost'])
         
-        frontier = sorted(frontier, key=operator.attrgetter('cost'))
-        
+        #print (frontier)
+        #print ("in")
+        #print (frontier[0]['child'])
         #GOAL STATE CHECK#
-        working_stack = frontier[0].shape
-        #print (working_stack)
-        visited.append(frontier[0].shape)
+        working_stack = frontier[0]['child']
+        visited.append(frontier[0]) #We go here now. 
         
         """Goal check: a combination that has no gaps in it and is arranged 
                    in this order: [5, 4, 3, 2, 1]"""
-        result = [x for x in frontier if forward_cost(x.shape) == 0 and x.shape[0] == 5]
+        result = [x for x in frontier if forward_cost(x['child']) == 0 and x['child'][0] == 5]
         if len(result) > 0: not_found = False
         
         #Delete from frontier
         del frontier[0]
 
-        if count == 20: break
+        if count == 40: break
  
         
         
         
-    
+    print ('End')
+    print (working_stack)
     if not_found == False: print (working_stack)

@@ -25,7 +25,7 @@ import operator
 NUM_ITEMS = 7
 WEIGHT_THRESHOLD = 120
 BASE_SCORE = 10
-GENERATION_X = 24
+GENERATION_X = 400
 SIZE_OF_SEARCH_SPACE = 40
 
 
@@ -121,6 +121,7 @@ def fitness(indi):
     normalizer = 10
     for idx in range(size_of_individual):
         if (type(individual.items[idx]) == int): continue
+        #print (type (indi.items[idx]))
         total_weight += (indi.items)[idx].weight
         total_value += indi.items[idx].value
       
@@ -139,7 +140,7 @@ def fitness(indi):
 def cull(population, percent):
     
     border = int(len(population) * percent * 0.01)
-    print ("THIS IS BORDER: " + str(border))
+
     for member in population: 
         if population.index(member) > border: 
             population[population.index(member)] = 0
@@ -229,14 +230,14 @@ def mutation(member):
             
             fill_index = member.items.index(0)
             item_to_add = ALL_ITEMS[4]
-            member.items[fill_index] = member
+            member.items[fill_index] = item_to_add
             
             
         elif fill >= 60 and fill < 70:
             
             fill_index = member.items.index(0)
             item_to_add = ALL_ITEMS[2]
-            member.items[fill_index] = member
+            member.items[fill_index] = item_to_add
             
             
         elif fill >= 70 and fill < 90:
@@ -285,6 +286,8 @@ if __name__ == "__main__":
     
     for idx in range(SIZE_OF_SEARCH_SPACE):
         search_space.append(random.choice(global_space))
+    print(search_space)
+        
         
     """Mutation test"""
     #print_individual(global_space[6])
@@ -303,6 +306,7 @@ if __name__ == "__main__":
     generation = 0 
     evolving = True
     while evolving and generation != GENERATION_X: 
+        #All boxes are unique 
         """Assign fitness to population"""
         for individual in search_space: 
             if (type(individual) == int): continue
@@ -312,30 +316,28 @@ if __name__ == "__main__":
         """Sort by order of fitness"""    
         search_space = sorted(search_space, key=operator.attrgetter('fitness'))
         
-        #print_individual(global_space[6])
         """Rank population"""
         for idx in range(len(search_space)):
             search_space[idx].rank = len(search_space) - idx
         #Population now ordered from fittest to weakest
         search_space.reverse()
-        #print_individual(global_space[0])
-        print (generation)
-     
+        
+        """{Print Fittest individual"""
+        print_individual(search_space[0])
+
+ 
         """Cull lower half of population"""
         cull_rate = 50
         cull(search_space, cull_rate)
         
-        #print_individual(global_space[63])
         
         """Reproduction - 
-                    Crossover 70% of the time. 
+                    Crossover 100% of the time. 
                     Mutate all the time and only 30% of population.
         """
      
-    
         to_cross = random.choice([1,2,3,4,5,6,7,8,9,10])
-        if to_cross <= 7:
-            print ("HERE")
+        if to_cross <= 10:
             while True:
                 try: search_space.index(0)
                 except ValueError: break
@@ -344,7 +346,7 @@ if __name__ == "__main__":
                 offspring = cross_over(search_space[parenta_idx], search_space[parentb_idx])
                 search_space[search_space.index(0)] = offspring
                 
-        print ("First of zeros:" + str(search_space.index(0)))
+        #print ("First of zeros:" + str(search_space.index(0)))
         #Mutation
         mutation_population = []
         portion_to_mutate = int(len(search_space) * 0.3)
@@ -353,6 +355,6 @@ if __name__ == "__main__":
             mutation_population.append(mut_idx)
         for index in mutation_population: 
             mutation(search_space[index])
-            if (search_space[index]) == 0: print ("Holla")
         
+      
         generation += 1
