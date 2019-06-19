@@ -222,7 +222,6 @@ def mutation(member):
             possible_items = [1, 6] #Random choice between 2 items of weight = 30
             item_no = random.choice(possible_items)
             item_to_add = ALL_ITEMS[item_no]
-            item_to_add.name = "Item_" + str(item_no)
             member.items[fill_index] = item_to_add
             
             
@@ -286,7 +285,7 @@ if __name__ == "__main__":
     
     for idx in range(SIZE_OF_SEARCH_SPACE):
         search_space.append(random.choice(global_space))
-    print(search_space)
+
         
         
     """Mutation test"""
@@ -302,7 +301,6 @@ if __name__ == "__main__":
     #print_individual (global_space[4])
     #print ("Offspring")
     #print_individual (child)
- 
     generation = 0 
     evolving = True
     while evolving and generation != GENERATION_X: 
@@ -322,8 +320,9 @@ if __name__ == "__main__":
         #Population now ordered from fittest to weakest
         search_space.reverse()
         
-        """{Print Fittest individual"""
+        """{Print Fittest individual}"""
         print_individual(search_space[0])
+
 
  
         """Cull lower half of population"""
@@ -355,6 +354,18 @@ if __name__ == "__main__":
             mutation_population.append(mut_idx)
         for index in mutation_population: 
             mutation(search_space[index])
+         
+        #Pruning repetated items individuals
+        for idx in range(SIZE_OF_SEARCH_SPACE):
+            individuals_items = search_space[idx].items
+            for ele in individuals_items:
+                if ele == 0 :continue
+                if individuals_items.count(ele) > 1 and ele != 0:
+                    num_repeats = individuals_items.count(ele)
+                    for y in range(num_repeats - 1):
+                        individuals_items[individuals_items.index(ele)] = 0
+                           
+    
         
       
         generation += 1
