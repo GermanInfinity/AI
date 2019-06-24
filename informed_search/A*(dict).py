@@ -13,8 +13,8 @@ import operator
 def backward_cost(stack):
 """  
 class Pancake_stack:
-    def __init__(self, shape, cost, backward_cost):
-        self.shape = shape
+    def __init__(self, stack, cost, backward_cost):
+        self.stack = stack
         self.cost = cost
         self.backward_cost = backward_cost
     
@@ -70,17 +70,17 @@ def flip(stack, pos):
 
 
 if __name__ == "__main__":
-    #start_stack = Pancake()
-    initial_state = [4, 2, 3, 1, 5]
-    frontier = []
-    visited = []
-    #Backward cost must by zero at this point. 
-    frontier.append({"child": initial_state, "cost": forward_cost(initial_state) + 0,
-                      "backward_cost": 0})
-
-
-
+    #start_stack = Pancake_stack([4, 2, 3, 1, 5], 0, 0)
+    """Test: test algorithm works with different arrangements of stacks."""
+    #start_stack = Pancake_stack([1, 5, 2, 4, 3], 0, 0)
+    #start_stack = Pancake_stack([1, 5, 2, 4, 3], 0, 0)
     
+    frontier = []
+    visited = [] 
+    frontier.append(start_stack)
+    #frontier.append({"child": initial_state, "cost": forward_cost(initial_state) + 0,
+                      #"backward_cost": 0})
+
     not_found = True
     count = 0
     
@@ -98,8 +98,8 @@ if __name__ == "__main__":
         
         """Goal check: a combination that has no gaps in it and is arranged 
                    in this order: [5, 4, 3, 2, 1]"""
-        if forward_cost(working_stack['child']) == 0 and working_stack['child'][0] == 5:
-            solution = "Pancakes found." + str(working_stack['child'])
+        if forward_cost(working_stack.stack) == 0 and working_stack.stack[0] == 5:
+            not_found = False
             break
 
         
@@ -114,53 +114,54 @@ if __name__ == "__main__":
                          Starts flipping from the second position, to avoid
                          creating an identical stack.
         """
-        """
-        for idx in range(2, flip_num+1):
+        for idx in range(2, 6):
             #On next iteration start from 2. 
             
-        Generate children by flipping 
-            flip_return = flip(working_stack['child'], idx)
+            """ Generate children by flipping """
+            flip_return = flip(working_stack.stack, idx)
             child = flip_return
             
-            backward_cost = working['backward_cost'] + idx   #keep track of backward costs
-            cost = forward_cost(flip_return) + backward_cost
+            backward_cost = working_stack.backward_cost + idx   #keep track of backward costs
+            cost = forward_cost(child) + backward_cost
             
+            expanded_node = Pancake_stack(child, cost, backward_cost)
             
             child_in_frontier = False
             child_in_visited = False
             
-            for idx in range(len(frontier)): #Checking all of frontier for child  
-                if frontier[idx]['child'] == child:
+            """ Do checks """
+            """If child is not in frontier or visited """
+            for ele in frontier: 
+                if ele.stack == expanded_node.stack: 
                     child_in_frontier = True
+            if child_in_frontier == False: 
+                frontier.append(expanded_node)
+                
+            for ele in visited: 
+                if ele.stack == expanded_node.stack: 
+                    child_in_visited == True
+            if child_in_visited == False and child_in_frontier == False:
+                frontier.append(expanded_node)
+                
+            """If child in frontier with higher cost """
+            for ele in frontier: 
+                if ele.stack == expanded_node.stack and ele.cost > expanded_node.cost:
+                    frontier[frontier.index(ele)] = expanded_node
 
-                if idx == len(frontier)-1 and child_in_frontier == False: 
-                    frontier.append({"child": flip_return, "cost": cost})
-                    
-            for idx in range(len(visited)): #Checking all of visited for child  
-                if visited[idx]['child'] == child:
-                    child_in_visited = True
-
-                if idx == len(visited)-1 and child_in_visited == False: 
-                    frontier.append({"child": flip_return, "cost": cost})
-                                
-            for element in frontier: 
-                if element['child'] == child and element['cost'] > cost:
-                    replace_child = {"child": flip_return, "cost": cost}
-                    frontier[frontier.index(element)] = {"child": flip_return, "cost": cost}
-                    
                     
         count += 1
         
         
-        frontier = sorted(frontier, key = lambda i:i['cost'])
+        #frontier = sorted(frontier, key = lambda i:i['cost'])
 
-        """
+        
         #break
         #if count == 5: break
  
         
         
-        
-    print ('End')
-    #print (solution)
-    if not_found == False: print (working_stack)
+
+    if not_found == False:
+        solution = "Pancakes found. " + str(working_stack.stack)
+        print (solution)
+        print (count)
