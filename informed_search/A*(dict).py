@@ -13,9 +13,10 @@ import operator
 def backward_cost(stack):
 """  
 class Pancake_stack:
-    def __init__(self, shape, cost):
+    def __init__(self, shape, cost, backward_cost):
         self.shape = shape
         self.cost = cost
+        self.backward_cost = backward_cost
     
 """
     Name: forward_cost
@@ -28,6 +29,8 @@ def forward_cost(stack):
     for idx in range(len(stack)):
         if abs(stack[idx + 1] - stack[idx]) > 1: gaps += 1
         if idx == len(stack) - 2: return gaps #This prevents from goign out of range
+        
+    """ CHECK SHAPE OF STACK  add 1 to cost if not in right order. """
     
 
 """
@@ -39,8 +42,17 @@ def forward_cost(stack):
     Output: flipped stack
 """    
 def flip(stack, pos):
+    
+    if pos > 5: 
+        print ("No flip")
+        return
+    if pos < 1: 
+        print ("No flip")
+        return 
+    
     size_of_stack = len(stack)
     rotate = []
+ 
     for idx in range(size_of_stack - pos, size_of_stack):
         rotate.append(stack[idx])
     
@@ -58,27 +70,59 @@ def flip(stack, pos):
 
 
 if __name__ == "__main__":
-    flip_num = 5
-    working_stack = [4, 2, 3, 1, 5]
+    #start_stack = Pancake()
+    initial_state = [4, 2, 3, 1, 5]
     frontier = []
     visited = []
-    frontier.append({"child": working_stack, "cost": forward_cost(working_stack)})
-    visited.append({"child": working_stack, "cost": forward_cost(working_stack)})
+    #Backward cost must by zero at this point. 
+    frontier.append({"child": initial_state, "cost": forward_cost(initial_state) + 0,
+                      "backward_cost": 0})
 
-    
+
 
     
     not_found = True
     count = 0
+    
+    """    Start search    """
     while not_found: 
-        count += 1
+        
+        if len(frontier) == 0: 
+            print ("Failure")
+            break 
+        
+        working_stack = frontier[0]
+        visited.append(frontier[0])
+        del frontier[0]
         
         
-        for idx in range(1, flip_num+1):
-            flip_return = flip(working_stack, idx)
-            backward_cost = idx  
+        """Goal check: a combination that has no gaps in it and is arranged 
+                   in this order: [5, 4, 3, 2, 1]"""
+        if forward_cost(working_stack['child']) == 0 and working_stack['child'][0] == 5:
+            solution = "Pancakes found." + str(working_stack['child'])
+            break
+
+        
+        """ Node Expansion 
+            Description: A pancake stack arranged in this order; 
+                                     [5, 4, 3, 2, 1] 
+                         has the biggest pancake(5) in the 0th index.
+                         Flips occur between pancakes, the first flip 
+                         occuring between index 4 and 3 of the pancake list
+                         (spatula below topmost pancake). 
+                         
+                         Starts flipping from the second position, to avoid
+                         creating an identical stack.
+        """
+        """
+        for idx in range(2, flip_num+1):
+            #On next iteration start from 2. 
             
+        Generate children by flipping 
+            flip_return = flip(working_stack['child'], idx)
             child = flip_return
+            
+            backward_cost = working['backward_cost'] + idx   #keep track of backward costs
             cost = forward_cost(flip_return) + backward_cost
             
             
@@ -104,35 +148,19 @@ if __name__ == "__main__":
                     replace_child = {"child": flip_return, "cost": cost}
                     frontier[frontier.index(element)] = {"child": flip_return, "cost": cost}
                     
-        if count == 1: del frontier[0] #Delete the initial state
                     
-        if len(frontier) == 0: 
-            print ("Failure")
-            break 
-
-        #print (frontier)
+        count += 1
+        
+        
         frontier = sorted(frontier, key = lambda i:i['cost'])
-        
-        #print (frontier)
-        #print ("in")
-        #print (frontier[0]['child'])
-        #GOAL STATE CHECK#
-        working_stack = frontier[0]['child']
-        visited.append(frontier[0]) #We go here now. 
-        
-        """Goal check: a combination that has no gaps in it and is arranged 
-                   in this order: [5, 4, 3, 2, 1]"""
-        result = [x for x in frontier if forward_cost(x['child']) == 0 and x['child'][0] == 5]
-        if len(result) > 0: not_found = False
-        
-        #Delete from frontier
-        del frontier[0]
 
-        if count == 40: break
+        """
+        #break
+        #if count == 5: break
  
         
         
         
     print ('End')
-    print (working_stack)
+    #print (solution)
     if not_found == False: print (working_stack)

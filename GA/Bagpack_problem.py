@@ -3,20 +3,13 @@
 """
 Created on Sun Jun  9 00:11:05 2019
 
-@author: ugoslight
+@author: Akwarandu Ugo Nwachuku
 
-Goal: Make 7 individuals
-Because we are culling by 50% we need find a balance between corss over and mutation
-So that the population does not run extinct before we reach an optimal solution.
+Assignment: Genetic Algorithm, Bagpack problem
 
-Keep going until we get optimal solution or we get pop == mating_pool
-
+Artificial Intelligence COMP 131
 """
-"""Include in README and here, to make things fair, we consider all the 
-   possible combinations of items in bagpack as our search space. 
-   
-   Mutation happens 100% of the time Crossover 80%
-"""
+
 
 from itertools import combinations
 import random
@@ -25,7 +18,7 @@ import operator
 NUM_ITEMS = 7
 WEIGHT_THRESHOLD = 120
 BASE_SCORE = 10
-GENERATION_X = 400
+#GENERATION_X = 10
 SIZE_OF_SEARCH_SPACE = 40
 
 
@@ -53,9 +46,6 @@ item_7 = item("Item_7", 30, 4)
 
 ITEMS_IDX = [0, 1, 2, 3, 4, 5, 6]
 ALL_ITEMS = [item_1, item_2, item_3, item_4, item_5, item_6, item_7]
-#Even number of chromosomes even number of items per individual 
-#Mutating don't replace with random item, instead give a good check 
-#Number of individuals has to stay constant 
 
 """
     Name: print_individual
@@ -75,43 +65,26 @@ def print_individual(individual):
     print (" ---- This is an individual ----")
     ans = "\n"
     size_of_individual = len(individual.items)
-    print ("Fitness:  " + str(individual.fitness) + "      Rank:  " + str(individual.rank))
+    print ("Fitness:  " + str(individual.fitness) + "      Rank:  " + 
+                                                          str(individual.rank))
     for i in range(size_of_individual):
         if (type(individual.items[i]) == int): continue
         ans += individual.items[i].name 
         ans += "\n"
     print (ans)
     
-#test_individual = individual((item_1, item_2), 0, 23)
-#print (print_individual(test_individual))
-
-
-"""A Population     
-    is made up of a collection of individuals."""
-#A population is a collection of individuals
-#An individual is a collection of items in a tuple
-#Individuals are of different sizes.
-    
-
-
         
 """
     Name: fitness
     
-    Description: Evaluates fitness of population; 
-                by evaluating closeness of an individuals value to
-                120. Values that equal 120 receive a score of ten, 
-                Values that equal 0 receive a score of zero; negative
-                numbers signify very unfit individuals. 
-                The further a number is away from 120 the more negative
-                the score. 
-                
-                i.e Individuals_value = 130
-                    Fitness = 130 / 120 * 10 = 10.83
-                    actul_fitness = 10 - (fitness - 10) = 9.17
+    Description: Normalizes value of an individual
+                 assigns a score of 0 to overweight individuals
+                 assigns a score of 5 to individuals within accepted weight 
+                 range
+                 sums score plus normalized value to return total score
                     
     Arguements: Takes an individual - global_space[10]
-                Individual is a tuple of objects
+    Returns:    Fitness score
 """
 def fitness(indi):
     if (type(indi) == int): return
@@ -121,7 +94,6 @@ def fitness(indi):
     normalizer = 10
     for idx in range(size_of_individual):
         if (type(individual.items[idx]) == int): continue
-        #print (type (indi.items[idx]))
         total_weight += (indi.items)[idx].weight
         total_value += indi.items[idx].value
       
@@ -139,7 +111,7 @@ def fitness(indi):
 """ 
 def cull(population, percent):
     
-    border = int(len(population) * percent * 0.01)
+    border = int(len(population) * percent)
 
     for member in population: 
         if population.index(member) > border: 
@@ -148,7 +120,7 @@ def cull(population, percent):
    
 """
     Name: cross_over
-    Description: swaps out half of an individuals genes with another individuals
+    Description: combines an individuals genes with another individuals
                  the swap takes place from a random location in the chromosome
     Returns: new offspring
 """
@@ -160,107 +132,61 @@ def cross_over(individual_a, individual_b):
     end = 7
     
     for item in individual_a.items:
-        offspring_items.append(item)
+        if item == 0: 
+            offspring_items.append(0)
+        else: 
+            offspring_items.append(1)
         if counter == idx_swap - 1:
             break
         counter += 1;
         
     for item in individual_b.items:
-        if counter < end:
-            offspring_items.append(item)
+        if counter < end: 
+            if item == 0: 
+                offspring_items.append(0)
+            else: 
+                offspring_items.append(1)
         counter += 1;
-    
-    offspring = Individual(offspring_items, 0, 0)
+        
+    new_list = [0,0,0,0,0,0,0]
+    for idx in range(7): 
+        if offspring_items[idx] == 0: 
+            new_list[idx] = offspring_items[idx]
+        else: 
+            new_list[idx] = ALL_ITEMS[idx]
+            
+    offspring = Individual(new_list, 0, 0)
+
     return offspring
    
 """
     Name: mutation
-    Description: if total weight is greater than 120, take out an item
-                 if total weight is less than 120, find difference and add 
-                 the most suitable item
-    Returns: new offspring
+    Description: randomly flips on or off a gene in an individual
+    Returns: mutated invidividual
 """
 def mutation(member):
     
-    weight = 0
-    weight_list = []
-    
     if (type(member) == int): return
     
-    for idx in range(len(member.items)):
-        if (type(member.items[idx]) == int): continue
-        weight += member.items[idx].weight
-        weight_list.append(member.items[idx].weight)
-        
-
-    if len(weight_list) == 0: 
-        member.items[random.choice(ITEMS_IDX)] =  random.choice(ALL_ITEMS)
-        return
+    mutate_gene = random.choice(ITEMS_IDX)
     
-    max_weight = max(weight_list)
-
-    if weight > 120: #Discard heaviest item
-        rem_idx = weight_list.index(max_weight)
-        member.items[rem_idx] = 0
+    if member.items[mutate_gene] == 0:
+        member.items[mutate_gene] = ALL_ITEMS[mutate_gene]
+    else: 
+        member.items[mutate_gene] = 0
         
-    else:
-        
-        fill = WEIGHT_THRESHOLD - weight
-        #Check distance from threshold, to select item to add. 
-        
-        if fill <= 20:
-            
-            fill_index = member.items.index(0)
-            item_to_add = ALL_ITEMS[0]
-            member.items[fill_index] =  item_to_add
-            
-            
-        elif fill > 20 and fill <= 30:
-            
-            fill_index = member.items.index(0)
-            
-            possible_items = [1, 6] #Random choice between 2 items of weight = 30
-            item_no = random.choice(possible_items)
-            item_to_add = ALL_ITEMS[item_no]
-            member.items[fill_index] = item_to_add
-            
-            
-        elif fill >= 50 and fill < 60:
-            
-            fill_index = member.items.index(0)
-            item_to_add = ALL_ITEMS[4]
-            member.items[fill_index] = item_to_add
-            
-            
-        elif fill >= 60 and fill < 70:
-            
-            fill_index = member.items.index(0)
-            item_to_add = ALL_ITEMS[2]
-            member.items[fill_index] = item_to_add
-            
-            
-        elif fill >= 70 and fill < 90:
-            
-            fill_index = member.items.index(0)
-            item_to_add = ALL_ITEMS[5]
-            member.items[fill_index] = item_to_add
-            
-        elif fill >= 90:
-            
-            fill_index = member.items.index(0)
-            item_to_add = ALL_ITEMS[3]
-            member.items[fill_index] = item_to_add
-            
-    
 
     
 """Global space - 
             Initial base to pick individuals for evolution for.
             Initial start of population history. 
             First generation.
+   Search space - 
+            Random selection of 40 individuals from global space
+            
    Description: global_space is a list of tuples; 
                 a tuple is an individual
-                global_space gets updated as the generations progress. 
+
 """
 if __name__ == "__main__":
     global_space = [] #Search_space, gets updated 
@@ -269,6 +195,7 @@ if __name__ == "__main__":
     
     for i in range(1, NUM_ITEMS+1):
         for idx in range(len(list(combinations(ITEMS_IDX, i)))):
+            if i == 3: continue #We don't collect 7 combination 3. 
             idx_items = list(combinations(ITEMS_IDX, i))[idx] #Making combination of indexs
             items_idx_list = [0,0,0,0,0,0,0]
             
@@ -285,13 +212,26 @@ if __name__ == "__main__":
     
     for idx in range(SIZE_OF_SEARCH_SPACE):
         search_space.append(random.choice(global_space))
-
         
+    print("           --------WELCOME TO THE BAGPACK PROBLEM----------")
+    print ("This genetic algorithm requires the user input the amount of generations ")
+    print ("of search evolution. ")
+    print ("Please enter the number of search generations: ")
+    GENERATION_X = int(input()) + 1
+    print ("If no input was entered, the algorithm would run for 10 generations!")
+
+    """Individual item list test"""
+    #for idx in range(7):
+        #if search_space[4].items[idx] == 0:
+            #print ("0")
+            #continue
+        #print (search_space[4].items[idx].name)
         
     """Mutation test"""
     #print_individual(global_space[6])
     #mutation(global_space[6])
     #print ("After MUTATION")
+    #print (global_space[6].items)
     #print_individual(global_space[6])
     """Cross-over test"""
     #child = cross_over(global_space[30], global_space[4])
@@ -301,16 +241,17 @@ if __name__ == "__main__":
     #print_individual (global_space[4])
     #print ("Offspring")
     #print_individual (child)
-    generation = 0 
-    evolving = True
-    while evolving and generation != GENERATION_X: 
+    
+    
+    generation = 1
+
+    while generation != GENERATION_X: 
         #All boxes are unique 
         """Assign fitness to population"""
         for individual in search_space: 
             if (type(individual) == int): continue
             individual.fitness = fitness(individual)
             
-        #print_individual(global_space[6])
         """Sort by order of fitness"""    
         search_space = sorted(search_space, key=operator.attrgetter('fitness'))
         
@@ -321,12 +262,11 @@ if __name__ == "__main__":
         search_space.reverse()
         
         """{Print Fittest individual}"""
+        print ("The fittest individual after generation: " + str(generation))
         print_individual(search_space[0])
 
-
- 
         """Cull lower half of population"""
-        cull_rate = 50
+        cull_rate = 0.5 
         cull(search_space, cull_rate)
         
         
@@ -342,10 +282,10 @@ if __name__ == "__main__":
                 except ValueError: break
                 parenta_idx = random.randint(0, 20)
                 parentb_idx = random.randint(0, 20)
-                offspring = cross_over(search_space[parenta_idx], search_space[parentb_idx])
+                offspring = cross_over(search_space[parenta_idx], 
+                                       search_space[parentb_idx])
                 search_space[search_space.index(0)] = offspring
                 
-        #print ("First of zeros:" + str(search_space.index(0)))
         #Mutation
         mutation_population = []
         portion_to_mutate = int(len(search_space) * 0.3)
@@ -354,18 +294,9 @@ if __name__ == "__main__":
             mutation_population.append(mut_idx)
         for index in mutation_population: 
             mutation(search_space[index])
-         
-        #Pruning repetated items individuals
-        for idx in range(SIZE_OF_SEARCH_SPACE):
-            individuals_items = search_space[idx].items
-            for ele in individuals_items:
-                if ele == 0 :continue
-                if individuals_items.count(ele) > 1 and ele != 0:
-                    num_repeats = individuals_items.count(ele)
-                    for y in range(num_repeats - 1):
-                        individuals_items[individuals_items.index(ele)] = 0
-                           
-    
         
+
       
         generation += 1
+
+    
