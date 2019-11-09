@@ -12,6 +12,7 @@ Artificial Intelligence COMP 131
 
 
 from itertools import combinations
+from random import shuffle 
 import random
 import operator 
 
@@ -176,6 +177,20 @@ def mutation(member):
         member.items[mutate_gene] = 0
         
 
+
+def strong_CV(population):
+    size_of_pop = len(population)
+    cross_lis = []
+    for idx in range(size_of_pop/2):
+        cross_lis.append(idx)
+    shuffle(cross_lis)
+    
+    parenta_idx = random.randint(0, size_of_pop/2)
+    parentb_idx = random.randint(0, 20)
+    offspring = cross_over(search_space[parenta_idx], 
+                                   search_space[parentb_idx])
+    search_space[search_space.index(0)] = offspring
+    
     
 """Global space - 
             Initial base to pick individuals for evolution for.
@@ -213,36 +228,10 @@ if __name__ == "__main__":
     for idx in range(SIZE_OF_SEARCH_SPACE):
         search_space.append(random.choice(global_space))
         
-    print("           --------WELCOME TO THE BAGPACK PROBLEM----------")
-    print ("This genetic algorithm requires the user input the amount of generations ")
-    print ("of search evolution. ")
+        
     print ("Please enter the number of search generations: ")
     GENERATION_X = int(input()) + 1
-    print ("If no input was entered, the algorithm would run for 10 generations!")
-
-    """Individual item list test"""
-    #for idx in range(7):
-        #if search_space[4].items[idx] == 0:
-            #print ("0")
-            #continue
-        #print (search_space[4].items[idx].name)
         
-    """Mutation test"""
-    #print_individual(global_space[6])
-    #mutation(global_space[6])
-    #print ("After MUTATION")
-    #print (global_space[6].items)
-    #print_individual(global_space[6])
-    """Cross-over test"""
-    #child = cross_over(global_space[30], global_space[4])
-    #print ("Parent 1")
-    #print_individual (global_space[3])
-    #print ("Parent 2")
-    #print_individual (global_space[4])
-    #print ("Offspring")
-    #print_individual (child)
-    
-    
     generation = 1
 
     while generation != GENERATION_X: 
@@ -264,36 +253,8 @@ if __name__ == "__main__":
         """{Print Fittest individual}"""
         print ("The fittest individual after generation: " + str(generation))
         print_individual(search_space[0])
-
-        """Cull lower half of population"""
-        cull_rate = 0.5 
-        cull(search_space, cull_rate)
-        
-        
-        """Reproduction - 
-                    Crossover 100% of the time. 
-                    Mutate all the time and only 30% of population.
-        """
-        while True:
-            try: search_space.index(0)
-            except ValueError: break
-            parenta_idx = random.randint(0, 20)
-            parentb_idx = random.randint(0, 20)
-            offspring = cross_over(search_space[parenta_idx], 
-                                   search_space[parentb_idx])
-            search_space[search_space.index(0)] = offspring
-                
-        #Mutation
-        mutation_population = []
-        portion_to_mutate = int(len(search_space) * 0.3)
-        for idx in range(portion_to_mutate):
-            mut_idx = random.randint(0, len(search_space)-1)
-            mutation_population.append(mut_idx)
-        for index in mutation_population: 
-            mutation(search_space[index])
-        
-
-        
+        print_individual(search_space[-1])
+         
         generation += 1
 
     

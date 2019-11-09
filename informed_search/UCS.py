@@ -1,9 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jul 21 23:28:31 2019
+
+@author: ugoslight
+"""
+
 import operator 
 """
-    Problem: Implementation of A* Search
+    Problem: Implementation of the UCS algorithm on the pancake problem
     Assignment: The Pancake problem
     Author: Ugo Nwachuku
-    Date: 27th June, 2019
+    Date: 21st July, 2019
 """
 
 class Pancake_stack:
@@ -66,8 +74,8 @@ def flip(stack, pos):
 
 
 if __name__ == "__main__":
-    """
-    origin = []
+    
+    """origin = []
     while len(origin) != 5:
         print ("Please input pancake at position", + (len(origin) + 1))
         inp = int(input())
@@ -77,20 +85,19 @@ if __name__ == "__main__":
         if inp > 5 or inp < 1: 
             print ("We don't have pancakes that size. Sorry!")
             continue
-        origin.append(inp)
-        print ("")"""
+        origin.append(inp)"""
     
-        
 
     solution = []
-    origin = [3, 2, 1, 5, 4]
+    origin = [3, 2, 1, 4, 5]
     start_stack = Pancake_stack(origin, 0, 0, 0)
     solution.append(start_stack)
-
+    """Test: test algorithm works with different arrangements of stacks."""
     
     frontier = []
     visited = [] 
     frontier.append(start_stack)
+    #visited.append(start_stack)
 
 
     not_found = True
@@ -107,6 +114,8 @@ if __name__ == "__main__":
         visited.append(frontier[0])
         del frontier[0]
         
+        #if len(frontier) > 1: 
+         #   print (frontier[0].stack)
   
         """Goal check: a combination that has no gaps in it and is arranged 
                    in this order: [5, 4, 3, 2, 1]"""
@@ -128,16 +137,19 @@ if __name__ == "__main__":
         """
         frontier = []
         for idx in range(2, 6):
-            
             """ Generate children by flipping """
             flip_return = flip(working_stack.stack, idx)
             child = flip_return
             
             """This assigns greater backward costs to flipping only few pancakes"""
-           
-            bc = 5 - idx
+            """So reward flipping more pancakes."""
+            if idx == 2: bc = 4
+            if idx == 3: bc = 3
+            if idx == 4: bc = 2
+            if idx == 5: bc = 1
+            
             backward_cost = working_stack.backward_cost + bc
-            cost = forward_cost(child) + backward_cost
+            cost = backward_cost
             
             expanded_node = Pancake_stack(child, cost, backward_cost, idx)
             
@@ -164,19 +176,18 @@ if __name__ == "__main__":
                 frontier.append(expanded_node)
                 child_in_frontier = True
                  
-        #Trip flipping backward cost 
-            
+
         """  Arrange frontier in order of cost """
         frontier.sort(key=operator.attrgetter('cost'))
         solution.append(frontier[0])
-        #for ele in frontier: 
-                #print (ele.cost)
-        #if count == 1: break
+        
 
     if not_found == False:
-        print ("The start pancake is: " + str(origin))
-        print ("")
+        soln = "Pancake stack found. " + str(working_stack.stack)
         for idx in range(1, len(solution)):
             print ("Flip " + str(solution[idx - 1].stack) + " at position " + str(solution[idx].pos))
-        print ("After the succcessive flips, we end up with: " + str(solution[-1].stack))        
+        print ("After the final flip, we end up with: " + str(solution[-1].stack))
+        print (count)
  
+        
+    

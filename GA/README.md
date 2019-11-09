@@ -1,8 +1,3 @@
-"""Include in README and here, to make things fair, we consider all the 
-   possible combinations of items in bagpack as our search space. 
-   
-   Mutation happens 100% of the time Crossover 80%
-
 BAGPACK PROBLEM
 The goal of this problem set is to pack a bag that does not exceed the threshold
 weight of 120kg, with the most valuable items available without repetition. 

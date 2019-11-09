@@ -3,20 +3,22 @@ import operator
     Problem: Implementation of A* Search
     Assignment: The Pancake problem
     Author: Ugo Nwachuku
-    Date: 27th June, 2019
 """
 
+"""As a searching problem: 
+   Forward Heuristic: Number of gaps
+   Backward Heuristic: Number of pancakes to flip 
+def backward_cost(stack):
+"""  
 class Pancake_stack:
-    def __init__(self, stack, cost, backward_cost, pos):
+    def __init__(self, stack, cost, backward_cost):
         self.stack = stack
         self.cost = cost
         self.backward_cost = backward_cost
-        self.pos = pos
-
     
 """
     Name: forward_cost
-    Description: Calculates the forward cost of a state. (Number of gaps)
+    Description: Calculates the forward cost of a state. 
     Input: Stack of pancakes
     Output: Cost function score
 """
@@ -24,7 +26,7 @@ def forward_cost(stack):
     gaps = 0
     for idx in range(len(stack)):
         if abs(stack[idx + 1] - stack[idx]) > 1: gaps += 1
-        if idx == len(stack) - 2: return gaps #This prevents from going out of range
+        if idx == len(stack) - 2: return gaps #This prevents from goign out of range
         
     """ CHECK SHAPE OF STACK  add 1 to cost if not in right order. """
     
@@ -66,39 +68,23 @@ def flip(stack, pos):
 
 
 if __name__ == "__main__":
-    """
-    origin = []
-    while len(origin) != 5:
-        print ("Please input pancake at position", + (len(origin) + 1))
-        inp = int(input())
-        if inp in origin: 
-            print ("That pancake is already in the list, please try again.")
-            continue
-        if inp > 5 or inp < 1: 
-            print ("We don't have pancakes that size. Sorry!")
-            continue
-        origin.append(inp)
-        print ("")"""
-    
-        
-
-    solution = []
-    origin = [3, 2, 1, 5, 4]
-    start_stack = Pancake_stack(origin, 0, 0, 0)
-    solution.append(start_stack)
-
+    #start_stack = Pancake_stack([4, 2, 3, 1, 5], 0, 0)
+    """Test: test algorithm works with different arrangements of stacks."""
+    #start_stack = Pancake_stack([1, 5, 2, 4, 3], 0, 0)
+    #start_stack = Pancake_stack([1, 5, 2, 4, 3], 0, 0)
     
     frontier = []
     visited = [] 
     frontier.append(start_stack)
-
+    #frontier.append({"child": initial_state, "cost": forward_cost(initial_state) + 0,
+                      #"backward_cost": 0})
 
     not_found = True
     count = 0
     
     """    Start search    """
     while not_found: 
-        count += 1
+        
         if len(frontier) == 0: 
             print ("Failure")
             break 
@@ -107,7 +93,7 @@ if __name__ == "__main__":
         visited.append(frontier[0])
         del frontier[0]
         
-  
+        
         """Goal check: a combination that has no gaps in it and is arranged 
                    in this order: [5, 4, 3, 2, 1]"""
         if forward_cost(working_stack.stack) == 0 and working_stack.stack[0] == 5:
@@ -126,57 +112,54 @@ if __name__ == "__main__":
                          Starts flipping from the second position, to avoid
                          creating an identical stack.
         """
-        frontier = []
         for idx in range(2, 6):
+            #On next iteration start from 2. 
             
             """ Generate children by flipping """
             flip_return = flip(working_stack.stack, idx)
             child = flip_return
             
-            """This assigns greater backward costs to flipping only few pancakes"""
-           
-            bc = 5 - idx
-            backward_cost = working_stack.backward_cost + bc
+            backward_cost = working_stack.backward_cost + idx   #keep track of backward costs
             cost = forward_cost(child) + backward_cost
             
-            expanded_node = Pancake_stack(child, cost, backward_cost, idx)
+            expanded_node = Pancake_stack(child, cost, backward_cost)
             
             child_in_frontier = False
             child_in_visited = False
             
-
             """ Do checks """
-                    
             """If child is not in frontier or visited """
             for ele in frontier: 
                 if ele.stack == expanded_node.stack: 
                     child_in_frontier = True
-                    if ele.cost > expanded_node.cost:
-                        frontier[frontier.index(ele)] = expanded_node
-                    
+            if child_in_frontier == False: 
+                frontier.append(expanded_node)
+                
             for ele in visited: 
                 if ele.stack == expanded_node.stack: 
-                    child_in_visited = True
+                    child_in_visited == True
+            if child_in_visited == False and child_in_frontier == False:
+                frontier.append(expanded_node)
+                
+            """If child in frontier with higher cost """
+            for ele in frontier: 
+                if ele.stack == expanded_node.stack and ele.cost > expanded_node.cost:
+                    frontier[frontier.index(ele)] = expanded_node
 
                     
+        count += 1
+        
+        
+        #frontier = sorted(frontier, key = lambda i:i['cost'])
 
-            if (child_in_frontier == False) and (child_in_visited == False):
-                frontier.append(expanded_node)
-                child_in_frontier = True
-                 
-        #Trip flipping backward cost 
-            
-        """  Arrange frontier in order of cost """
-        frontier.sort(key=operator.attrgetter('cost'))
-        solution.append(frontier[0])
-        #for ele in frontier: 
-                #print (ele.cost)
-        #if count == 1: break
+        
+        #break
+        #if count == 5: break
+ 
+        
+        
 
     if not_found == False:
-        print ("The start pancake is: " + str(origin))
-        print ("")
-        for idx in range(1, len(solution)):
-            print ("Flip " + str(solution[idx - 1].stack) + " at position " + str(solution[idx].pos))
-        print ("After the succcessive flips, we end up with: " + str(solution[-1].stack))        
- 
+        solution = "Pancakes found. " + str(working_stack.stack)
+        print (solution)
+        print (count)
