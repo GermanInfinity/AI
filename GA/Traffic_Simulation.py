@@ -172,19 +172,24 @@ class Car:
         self.dest = destination
 
         
-        
-if __name__ == "__main__":
+class Traffic_Simulation:
+    def __init__(self, traffic_sign_ord):
+        lanes = make_lanes()
+        print (lanes)
 
-    """Make lanes"""
+"""
+if __name__ == "__main__":
+    
+    Make lanes
     lanes = make_lanes()
     
-    """Move cars in lanes"""
+    Move cars in lanes
     lanes = move(lanes)
     for idx in range(55): 
         lanes = move(lanes)
     lanes_pos = pos_in_lanes(lanes)
     
-     
+    //Start a timer
     #until a car reaches 0.8km, stop lane in list
     #for ele in lanes: 
      #   if 0.8
@@ -222,8 +227,8 @@ if __name__ == "__main__":
         print ("")
         secs += 1
      
-                    
-         
+    //Return timer end 
+         """
     
     
     
