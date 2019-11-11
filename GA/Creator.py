@@ -6,6 +6,13 @@ Created on Sun Nov 10 17:05:09 2019
 @author: ugoslight
 """
 
+
+
+
+
+
+
+artist = []
 with open("out.py", "w") as f1: 
 
     f1.writelines("from graphics import *")

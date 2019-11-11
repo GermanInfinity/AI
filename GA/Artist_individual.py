@@ -8,10 +8,17 @@ Created on Sun Nov 10 15:58:56 2019
 
 from graphics import *
 
-win = GraphWin('My Circle', 100, 100)
-c = Circle(Point(50,50), 10)
-ca = Circle(Point(55,75), 10)
+win = GraphWin('Canvas', 350, 570)
+
+c = Circle(Point(100,50), 30)
 c.draw(win)
-ca.draw(win)
+
+req = Rectangle(Point(20, 560), Point(100, 10))
+req.draw(win)
+
+p = Polygon(Point(10,1), Point(50,3), Point(2,70))
+p.draw(win)
+    
+
 win.getMouse()
 win.close()
