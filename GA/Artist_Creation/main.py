@@ -15,10 +15,11 @@ if __name__ == "__main__":
     
     
     """Create Artist"""
-    artist_name = "Segun"
+    artist_name = "John"
     ad = Create_artist(artist_name)
     
     """Display and assess creation"""
     a = Display.Display(artist_name, ad.script)
 
     #run_artist #See/Run the script produced
+    
