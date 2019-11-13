@@ -13,7 +13,7 @@ Created on Thu Oct 31 14:49:40 2019
 
 """
 
-
+import time
 LENGTH_OF_CAR = 0.0014
 
 def light1(car_at_light, sign, secs):
@@ -171,64 +171,106 @@ class Car:
         self.origin = origin
         self.dest = destination
 
-        
+       
 class Traffic_Simulation:
     def __init__(self, traffic_sign_ord):
+        
+        Seq_Instructions = traffic_sign_ord
         lanes = make_lanes()
-        print (lanes)
+        continue_sim = True
+        
+        sim_timer = 0
+        while continue_sim:
+            sim_timer += 1 
+            """Check position of all cars"""
+            status = []
+            lanes_pos = pos_in_lanes(lanes)
+            
+            for lane in lanes_pos:
+                status.append(all(ele >= 1.6 for ele in lane))
+            
+            continue_sim = any(ele == False for ele in status)
+            
+            lanes = move(lanes)
+            lanes_pos = pos_in_lanes(lanes)
+            
+            """Intersection
+            for lane in lanes:
+                for car in lane: 
+                    if car.pos >= 0.784 and car.pos <= 0.812:
+                        #Find light for lane
+                        light_no = lanes.index(lane)
+                        
+                        #Instruct cars on light in lane
+                        car_no = lane.index(car)
+                        for idx in range(car_no, len(lane)):
+                            car_behind = lane[idx]
+                            car_behind.state = Seq_Instructions[light_no]
+                        break
+            Seq_Instructions = switch(Seq_Instructions, secs)"""
+            
+        self.time_taken = sim_timer
+        
+    def timer(self):
+        return self.time_taken
+        
 
+""" Simulation waits for each car to get into intersection; 
+    Once there, it changes the status of each car based on the light instr.
+    The light instructions change after 5 seconds. 
+    Collisions: 
+"""
 """
 if __name__ == "__main__":
     
-    Make lanes
+    #Make lanes
     lanes = make_lanes()
     
-    Move cars in lanes
+    #Move cars in lanes
     lanes = move(lanes)
     for idx in range(55): 
         lanes = move(lanes)
     lanes_pos = pos_in_lanes(lanes)
     
-    //Start a timer
+    #Start a timer
     #until a car reaches 0.8km, stop lane in list
     #for ele in lanes: 
      #   if 0.8
     
     #check traffic lights for everyone
     #carry out instructions
-    #INSTRUCTIONS = {TL_EB: ["Go", 5, "Wait", 5, "Stop", 5], TL_EA: ["Go", 5, "Wait", 5, "Stop", 5],
-     #               TL_FA: ["Go", 5, "Wait", 5, "Stop", 5], TL_FC: ["Go", 5, "Wait", 5, "Stop", 5],
-      #              TL_DA: ["Go", 5, "Wait", 5, "Stop", 5]}
-    
-    Seq_Instructions = ["Go", "Wait", "Stop", "Go", "Wait"]
+  
+    Seq_Instructions = ["Go", "Stop", "Stop", "Stop", "Stop"]
     secs = 0
-    
+    print (lanes_pos)
     while secs < 25: 
         
-        for ele in lanes:
-            for car in ele: 
+        for lane in lanes:
+            for car in lane: 
                 if car.pos >= 0.784 and car.pos <= 0.812:
                     #Find light for lane
-                    light_no = lanes.index(ele)
+                    light_no = lanes.index(lane)
                     
                     #Instruct cars on light in lane
-                    car_no = ele.index(car)
-                    for idx in range(car_no, len(ele)):
-                        car.state = Seq_Instructions[light_no]
+                    car_no = lane.index(car)
+                    for idx in range(car_no, len(lane)):
+                        car_behind = lane[idx]
+                        car_behind.state = Seq_Instructions[light_no]
                     break
                         
         
-        print (Seq_Instructions) 
+        #print (Seq_Instructions) 
         lanes_pos = pos_in_lanes(lanes)
-        print (lanes_pos)
+        #print (lanes_pos)
         
         lanes = move(lanes)
-        Seq_Instructions = switch(Seq_Instructions, secs)
+        #Seq_Instructions = switch(Seq_Instructions, secs)
         print ("")
         secs += 1
-     
-    //Return timer end 
-         """
+    print (lanes_pos)
+    #Return timer end 
+         
     
     
+    """
     

@@ -8,7 +8,7 @@ Created on Sun Nov 10 17:05:09 2019
 
 import random
 
-HEAD_gene = ["from graphics import *", "\n", "win = GraphWin('Canvas', 350, 570)", "\n"]
+HEAD_gene = ["from graphics import *", "\n", "win = GraphWin('Canvas', 350, 570)", "\n", "from PIL import Image as NewImage", "\n"]
 TAIL_gene = ["win.getMouse()", "\n", "win.close()"]
 
 def decider(circle_no, rec_no, poly_no):
@@ -91,7 +91,8 @@ class Create_artist:
         self.rec = random.randint(0, 20)
         self.poly = random.randint(0, 300)
         self.gene = decider(self.circle, self.rec, self.poly)
-        self.script = HEAD_gene + make_script(self.gene) + TAIL_gene
+        image_name = ["win.postscript(file='" + str(name) + "', colormode='color')", "\n"]
+        self.script = HEAD_gene + make_script(self.gene) + image_name + TAIL_gene
         
 
 
