@@ -106,7 +106,7 @@ def run():
     culled_pool = cull(ranked_pool)
     
 
-    print_pool(culled_pool, 'rank')
+    print_pool(culled_pool, 'fitness')
     print ("End")
     
 run()

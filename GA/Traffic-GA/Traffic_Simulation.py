@@ -194,7 +194,7 @@ class Traffic_Simulation:
             lanes = move(lanes)
             lanes_pos = pos_in_lanes(lanes)
             
-            """Intersection
+            """Intersection"""
             for lane in lanes:
                 for car in lane: 
                     if car.pos >= 0.784 and car.pos <= 0.812:
@@ -207,7 +207,7 @@ class Traffic_Simulation:
                             car_behind = lane[idx]
                             car_behind.state = Seq_Instructions[light_no]
                         break
-            Seq_Instructions = switch(Seq_Instructions, secs)"""
+            Seq_Instructions = switch(Seq_Instructions, sim_timer)
             
         self.time_taken = sim_timer
         
