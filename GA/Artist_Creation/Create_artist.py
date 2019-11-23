@@ -8,91 +8,76 @@ Created on Sun Nov 10 17:05:09 2019
 
 import random
 
-HEAD_gene = ["from graphics import *", "\n", "win = GraphWin('Canvas', 480, 360)", "\n", "from PIL import Image as NewImage", "\n"]
-TAIL_gene = ["win.getMouse()", "\n", "win.close()"]
+HEAD_gene = ["from PIL import Image, ImageDraw", "\n", "image1 = Image.new('RGB', (480, 360), '#ffffff')", "\n"]
+MID_gene = ["draw = ImageDraw.Draw(image1)", "\n"]
 
-def decider(circle_no, rec_no, poly_no):
+def decider(circle_no, lin_no):
         total_gene = {} #Figures to change/optimize
     
         circle_gene = []
         for idx in range(circle_no):
             
-            circ1 = random.randint(0, 150)
-            circ2 = random.randint(0, 349)
-            circ_rad = random.randint(0, 349)
+            circx1 = random.randint(0, 480)
+            circy1 = random.randint(0, 360)
+            circx2 = random.randint(0, 480)
+            circy2 = random.randint(0, 360)
             
-            circle_gene.append([circ1, circ2, circ_rad])
+            circle_gene.append([circx1, circx2, circy1, circy2])
             
         
-        rec_gene = []
-        for idx in range(rec_no):
+        line_gene = []
+        for idx in range(lin_no):
             
-            rec1 = random.randint(0, 349)
-            rec2 = random.randint(0, 569)
-            rec3 = random.randint(0, 349)
-            rec4 = random.randint(0, 569)
+            linx1 = random.randint(0, 480)
+            liny1 = random.randint(0, 360)
+            linx2 = random.randint(0, 480)
+            liny2 = random.randint(0, 360)
             
-            rec_gene.append([rec1, rec2, rec3, rec4])
+            line_gene.append([linx1, linx2, liny1, liny2])
             
-        poly_gene = []
-        for idx in range(poly_no):
-            poly1 = random.randint(0, 300)
-            poly2 = random.randint(0, 300)
-            
-            poly3 = random.randint(0, 300)
-            poly4 = random.randint(0, 300)
-            
-            poly5 = random.randint(0, 300)
-            poly6 = random.randint(0, 300)
-            
-            
-            poly_gene.append([poly1, poly2, poly3, poly4, poly5, poly6])
+        total_gene = {"Circle": circle_gene, "Line": line_gene}
         
-        total_gene = {"Circle": circle_gene, "Rectangle": rec_gene, "Polygon": poly_gene}
         return total_gene
     
     
+    
+
+# do the PIL image/draw (in memory) drawings
+
 def make_script(GENE): 
     all_lines = []
     for ele in GENE["Circle"]:
-        line = "c=Circle(Point(" + str(ele[0]) + "," + str(ele[1]) + ")," + str(ele[2]) + ")"
-        line2 = "c.draw(win)"
+        line = "c=[" + str(ele[0]) + "," + str(ele[1]) + "," + str(ele[2]) + "," + str(ele[3]) + "]"
+        line2 = "draw.ellipse(c,'#ffffff','#000000')"
         all_lines.append(line)
         all_lines.append("\n")
         all_lines.append(line2)
         all_lines.append("\n")
         
-    for ele in GENE["Rectangle"]:
-        line = "r=Rectangle(Point(" + str(ele[0]) + "," + str(ele[1]) + ")," + "Point(" + str(ele[2]) + "," + str(ele[3]) + "))"
-        line2 = "r.draw(win)"
+    for ele in GENE["Line"]:
+        line = "l=[" + str(ele[0]) + "," + str(ele[1]) + "," + str(ele[2]) + "," + str(ele[3]) + "]"
+        line2 = "draw.line(l,'#000000')"
         all_lines.append(line)
         all_lines.append("\n")
         all_lines.append(line2)
         all_lines.append("\n")
-    
-    for ele in GENE["Polygon"]:
-        line = "p=Polygon(Point(" + str(ele[0]) + "," + str(ele[1])  + ")," + "Point(" + str(ele[2]) + "," + str(ele[3])  + ")," + "Point(" + str(ele[4])  + "," + str(ele[5]) + "))"  
-        line2 = "p.draw(win)"
-        all_lines.append(line)
-        all_lines.append("\n")
-        all_lines.append(line2)
-        all_lines.append("\n")
-        
     return all_lines
     
     
     
 
 class Create_artist: 
-    def __init__(self, name):
+    def __init__(self, name, fitness):
         self.name = name
-
+        self.fitness = fitness
         self.circle = random.randint(0, 20) 
-        self.rec = random.randint(0, 20)
-        self.poly = random.randint(0, 20)
-        self.gene = decider(self.circle, self.rec, self.poly)
-        image_name = ["win.postscript(file='" + str(name) + "', colormode='color')", "\n"]
-        self.script = HEAD_gene + make_script(self.gene) + image_name + TAIL_gene
+        self.lin = random.randint(0, 20)
+    
+        self.gene = decider(self.circle, self.lin)
+        #image_name = ["image1.show()"]
+        image_name = ["image1.save('" + str(name) + ".jpg')"]
+        
+        self.script = HEAD_gene + MID_gene + make_script(self.gene) + image_name
         
 
 

@@ -9,7 +9,10 @@ GA - Artist optimizer
 """
 
 from Create_artist import Create_artist
+from subprocess import call 
 from Display import Display
+from image_diff import image_diff
+import os 
 
 def initial_population():
     all_artists = []
@@ -49,17 +52,29 @@ def initial_population():
     return all_artists 
 
 if __name__ == "__main__":
+    WSK = "WSK.jpg"
     
     """ES: Initialize, Rank, Cull, Crossover"""
     """Create 10 Artists"""
     #population = initial_population()
-    artist_name = "Artist10"
-    Artist10 = Create_artist(artist_name)
+    artist_name = "build"
+    Artist10 = Create_artist(artist_name, 0)
 
-    """Display and assess creation"""
+    """Write creation to .py file creation"""
     a = Display.Display(artist_name, Artist10.script)
-
-    #run_artist #See/Run the script produced
+    
+    """Run .py file"""
+    script = artist_name+".py"
+    call(["python3", script])
+    artwork = artist_name + ".jpg"
+    
+    """Save generated images"""
+    a = image_diff(artwork, WSK)
+    a.blackened_white()
+    Artist10.fitness = a.compare()
+    
+    """Compute fitness"""
+    print (Artist10.fitness)
     
 
-    
+    print ("DONE")
