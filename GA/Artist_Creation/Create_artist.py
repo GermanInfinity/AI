@@ -74,8 +74,8 @@ class Create_artist:
         self.lin = random.randint(0, 20)
     
         self.gene = decider(self.circle, self.lin)
-        #image_name = ["image1.show()"]
-        image_name = ["image1.save('" + str(name) + ".jpg')"]
+        
+        image_name = ["image1.save('" + str(name) + ".png')"]
         
         self.script = HEAD_gene + MID_gene + make_script(self.gene) + image_name
         

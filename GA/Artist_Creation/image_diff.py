@@ -1,26 +1,27 @@
 from PIL import Image 
 
 class image_diff:
-    def __init__(self, image1, image2):
+    def __init__(self, image1, img_save1, image2, img_save2):
         self.image1= image1
         self.image2= image2
-
+        self.img_save_name1 = img_save1
+        self.img_save_name2 = img_save2
         
     def blackened_white(self):
         """Black and white images"""
         image_file1 = Image.open(self.image1) # open colour image
         image_file1 = image_file1.convert('1') # convert image to black and white
-        image_file1.save('image1.png')
+        image_file1.save(self.img_save_name1+'.png')
         
         image_file2 = Image.open(self.image2) # open colour image
         image_file2 = image_file2.convert('1') # convert image to black and white
-        image_file2.save('image2.png')
+        image_file2.save(self.img_save_name2+'.png')
         
     def compare(self):
         """Compare images"""
 
-        i1 = Image.open('image1.png')
-        i2 = Image.open('image2.png')
+        i1 = Image.open(self.img_save_name1+'.png')
+        i2 = Image.open(self.img_save_name2+'.png')
         
         assert i1.mode == i2.mode, "Different kinds of images."
         assert i1.size == i2.size, "Different sizes."
@@ -37,4 +38,3 @@ class image_diff:
                 
             
         
-      

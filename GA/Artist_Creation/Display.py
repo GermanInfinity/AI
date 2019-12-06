@@ -13,6 +13,3 @@ class Display:
             for line in script:
                 f1.writelines(line)
         
-
-
-

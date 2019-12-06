@@ -1,0 +1,40 @@
+from PIL import Image, ImageDraw
+image1 = Image.new('RGB', (480, 360), '#ffffff')
+draw = ImageDraw.Draw(image1)
+c=[186,59,173,232]
+draw.ellipse(c,'#ffffff','#000000')
+l=[246,365,304,4]
+draw.line(l,'#000000')
+l=[138,18,260,180]
+draw.line(l,'#000000')
+l=[274,372,17,262]
+draw.line(l,'#000000')
+l=[339,421,21,134]
+draw.line(l,'#000000')
+l=[354,458,343,212]
+draw.line(l,'#000000')
+l=[311,13,50,18]
+draw.line(l,'#000000')
+l=[283,272,280,155]
+draw.line(l,'#000000')
+l=[43,197,170,172]
+draw.line(l,'#000000')
+l=[59,447,104,147]
+draw.line(l,'#000000')
+l=[190,134,300,340]
+draw.line(l,'#000000')
+l=[442,415,324,143]
+draw.line(l,'#000000')
+l=[180,124,10,358]
+draw.line(l,'#000000')
+l=[382,359,144,221]
+draw.line(l,'#000000')
+l=[3,89,112,136]
+draw.line(l,'#000000')
+l=[89,446,329,88]
+draw.line(l,'#000000')
+l=[193,436,257,181]
+draw.line(l,'#000000')
+l=[1,463,89,241]
+draw.line(l,'#000000')
+image1.save('Artist1.png')

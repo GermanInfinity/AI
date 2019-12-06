@@ -1,0 +1,96 @@
+<html lang="en">
+
+<head>
+	<meta charset=utf-8>
+	<title>Testing</title>
+	
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+   <!-- Buttons --> 
+   <button class="signup-button" onclick="create_user()">Create User</button>
+   <button class="login-button" onclick="login()">Login</button>
+
+   <div class="divform" id="loginform">
+   	<form class="form-container">
+
+   		<h1>LOGIN</h1>
+
+	    <label for="username"><b>Username</b></label>
+	    <input type="text" placeholder="Enter Username" name="username" required>
+
+	    <label for="psw"><b>Password</b></label>
+	    <input type="password" placeholder="Enter Password" name="psw" required>
+
+	    <button type="submit" class="btn" form action="/test.php" method="post">Login</button>
+	    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+
+   	</form>
+   </div>
+
+   <div class="divform" id="signupform">
+   	<form class="form-container">
+
+   		<h1>SIGN UP</h1>
+
+	    <label for="username"><b>Username</b></label>
+	    <input type="text" placeholder="Enter Username" name="username" required>
+
+	    <label for="psw"><b>Password</b></label>
+	    <input type="password" placeholder="Enter Password" name="psw" required>
+
+	    <button type="submit" class="btn" onclick="signup()">Sign up</button>
+	    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+
+   	</form>
+   </div>
+   
+
+   <h1>
+    <button class="btn" button type="button" onclick="onMic()"></button>
+   </h1>
+
+
+
+   <script>
+     
+    function login() { 
+   	   document.getElementById('loginform').style.display = "block";
+   	}
+
+    function create_user() { 
+   	   document.getElementById('signupform').style.display = "block";
+   	}
+
+   	function signup() {
+   		var a = document.getElementById('signupform').elements["username"];
+   		console.log(a);
+   	}
+
+    async function onMic() {
+        let stream = null;
+        
+        try {
+
+          const options = {mimeType: 'audio/webm'};
+
+          const recordedChunks = [];
+
+          const mediaRecorder = new MediaRecorder(stream, options); 
+
+          console.log("HEaven");
+          stream = await navigator.mediaDevices.getUserMedia({audio: true});
+          
+
+        } catch(err) { 
+          console.log("Error");
+        }
+    }
+
+   </script>
+
+
+
+<body>
+</body>
+  

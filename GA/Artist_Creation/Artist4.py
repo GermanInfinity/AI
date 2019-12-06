@@ -1,0 +1,42 @@
+from PIL import Image, ImageDraw
+image1 = Image.new('RGB', (480, 360), '#ffffff')
+draw = ImageDraw.Draw(image1)
+c=[180,478,154,162]
+draw.ellipse(c,'#ffffff','#000000')
+c=[207,140,170,76]
+draw.ellipse(c,'#ffffff','#000000')
+c=[134,337,337,80]
+draw.ellipse(c,'#ffffff','#000000')
+c=[82,356,47,344]
+draw.ellipse(c,'#ffffff','#000000')
+c=[270,215,278,79]
+draw.ellipse(c,'#ffffff','#000000')
+c=[54,10,353,148]
+draw.ellipse(c,'#ffffff','#000000')
+c=[416,137,107,68]
+draw.ellipse(c,'#ffffff','#000000')
+l=[174,397,183,129]
+draw.line(l,'#000000')
+l=[416,137,223,105]
+draw.line(l,'#000000')
+l=[174,25,202,303]
+draw.line(l,'#000000')
+l=[383,70,40,61]
+draw.line(l,'#000000')
+l=[439,449,360,197]
+draw.line(l,'#000000')
+l=[413,442,346,53]
+draw.line(l,'#000000')
+l=[428,476,302,302]
+draw.line(l,'#000000')
+l=[397,205,56,188]
+draw.line(l,'#000000')
+l=[60,255,24,118]
+draw.line(l,'#000000')
+l=[310,157,303,216]
+draw.line(l,'#000000')
+l=[1,139,117,65]
+draw.line(l,'#000000')
+l=[83,462,322,255]
+draw.line(l,'#000000')
+image1.save('Artist4.png')

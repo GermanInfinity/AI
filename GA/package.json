@@ -1,0 +1,11 @@
+{
+  "name": "ga",
+  "version": "1.0.0",
+  "description": "BAGPACK PROBLEM The goal of this problem set is to pack a bag that does not exceed the threshold weight of 120kg, with the most valuable items available without repetition.  As a GENETIC PROBLEM:  We need to create candidate solutions to the search problem, the candidate  solutions go through a natural selection process with the purpose of evolving  the population via crossover and mutation to arrive at a solution.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
