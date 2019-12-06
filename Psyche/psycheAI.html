@@ -53,39 +53,40 @@
 
 
    <script>
-     
-    function login() { 
-   	   document.getElementById('loginform').style.display = "block";
-   	}
+    
+       
+    // function login() { 
+   	//    document.getElementById('loginform').style.display = "block";
+   	// }
 
-    function create_user() { 
-   	   document.getElementById('signupform').style.display = "block";
-   	}
+    // function create_user() { 
+   	//    document.getElementById('signupform').style.display = "block";
+   	// }
 
-   	function signup() {
-   		var a = document.getElementById('signupform').elements["username"];
-   		console.log(a);
-   	}
+   	// function signup() {
+   	// 	var a = document.getElementById('signupform').elements["username"];
+   	// 	console.log(a);
+   	// }
 
-    async function onMic() {
-        let stream = null;
+    // async function onMic() {
+    //     let stream = null;
         
-        try {
+    //     try {
 
-          const options = {mimeType: 'audio/webm'};
+    //       const options = {mimeType: 'audio/webm'};
 
-          const recordedChunks = [];
+    //       const recordedChunks = [];
 
-          const mediaRecorder = new MediaRecorder(stream, options); 
+    //       const mediaRecorder = new MediaRecorder(stream, options); 
 
-          console.log("HEaven");
-          stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    //       console.log("HEaven");
+    //       stream = await navigator.mediaDevices.getUserMedia({audio: true});
           
 
-        } catch(err) { 
-          console.log("Error");
-        }
-    }
+    //     } catch(err) { 
+    //       console.log("Error");
+    //     }
+    // }
 
    </script>
 

@@ -1,15 +1,3 @@
-// const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
-// const { IamAuthenticator } = require('ibm-watson/auth');
-
-// const speechToText = new SpeechToTextV1({
-//   authenticator: new IamAuthenticator({
-//     apikey: 'W2AmN26KqknmveZB94NPQYE3KwUUmySV_lfHfiUq_Oks',
-//   }),
-//   url: 'https://stream.watsonplatform.net/speech-to-text/api',
-// });
-
-// console.log("Done")
-
 
 
 //app.js
