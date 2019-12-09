@@ -2,7 +2,6 @@
 
 //app.js
 
-const http = require('http');
 
 
 // // Create an instance of the http server to handle HTTP requests
@@ -32,8 +31,10 @@ const router = express.Router();
 
 router.get('/', function(req, res){
 	res.sendFile(path.join(__dirname+'/psycheAI.html'));
+
 });
 
+app.use(express.static('./'))
 app.use('/', router);
 app.listen(process.env.port || 3000);
 console.log('Node server running on port 3000');
