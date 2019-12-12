@@ -99,14 +99,15 @@ def initial_population():
                        Artist6, Artist7, Artist8, Artist9, Artist10))
     return all_artists 
 
+
 if __name__ == "__main__":
-    WSK = "WSK.jpg"
+    WSK = "Artist00.png"
     gen = 0 
     
     """Create 10 Artists"""
     population = initial_population()
 
-    while gen < 30: 
+    while gen < 5: 
         """Evaluating fitness in population"""
         for artist in population: 
             Display.Display(artist.name, artist.script)
