@@ -1,3 +1,9 @@
+GENETIC ALGORITHM FOLDER: 
+Contains Bagpack problem
+Traffic Simulation for Genetic Algorithm optimizer
+Artist optimization with Genetic Algorithm
+
+
 BAGPACK PROBLEM
 The goal of this problem set is to pack a bag that does not exceed the threshold
 weight of 120kg, with the most valuable items available without repetition. 
