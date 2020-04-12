@@ -1,9 +1,12 @@
-#!/usr/bin/env python3
+s#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Sun Nov 10 17:05:09 2019
 
 @author: ugoslight
+
+    Create artist module handles developing scripts to run for image.
+    Takes in an array of numbers to create script with. 
 """
 
 import random
@@ -65,19 +68,30 @@ def make_script(GENE):
     
     
     
+def make_eco_script(Genes):
+    all_lines = []
+    for ele in Genes:
+        line = "l=[" + str(ele[0]) + "," + str(ele[1]) + "," + str(ele[2]) + "," + str(ele[3]) + "]"
+        line2 = "draw.line(l,'#000000')"
+        all_lines.append(line)
+        all_lines.append("\n")
+        all_lines.append(line2)
+        all_lines.append("\n")
+    return all_lines
+
 
 class Create_artist: 
-    def __init__(self, name, fitness):
+    def __init__(self, name, fitness, eco_people):
         self.name = name
         self.fitness = fitness
-        self.circle = random.randint(0, 20) 
-        self.lin = random.randint(0, 20)
+        #self.circle = random.randint(0, 20) 
+        #self.lin = random.randint(0, 20)
     
-        self.gene = decider(self.circle, self.lin)
+        self.gene = eco_people
         
         image_name = ["image1.save('" + str(name) + ".png')"]
         
-        self.script = HEAD_gene + MID_gene + make_script(self.gene) + image_name
+        self.script = HEAD_gene + MID_gene + make_eco_script(self.gene) + image_name
         
 
 

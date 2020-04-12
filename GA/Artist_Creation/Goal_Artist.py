@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+ from PIL import Image, ImageDraw
 image1 = Image.new('RGB', (480, 360), '#ffffff')
 draw = ImageDraw.Draw(image1)
 

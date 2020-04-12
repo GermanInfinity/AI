@@ -1,4 +1,4 @@
-from PIL import Image 
+pofrom PIL import Image 
 
 class image_diff:
     def __init__(self, image1, img_save1, image2, img_save2):

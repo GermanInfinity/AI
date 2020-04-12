@@ -1,4 +1,12 @@
-t#!/usr/bin/env python3
+k#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 12 04:02:55 2019
+
+@author: ugoslight
+"""
+
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 12 05:06:18 2019
@@ -11,6 +19,7 @@ GA - Artist optimizer
 from Create_artist import Create_artist
 from subprocess import call 
 from Display import Display
+from Ecosystem import Ecosystem
 from image_diff import image_diff
 import os, random, operator
 
@@ -101,52 +110,44 @@ def initial_population():
 
 
 if __name__ == "__main__":
-    WSK = "Artist00.png"
+    Goal = "Goal_image.png"
     gen = 0 
     
-    """Create 10 Artists"""
-    population = initial_population()
+    """Create Ecosystem"""
+    #Ecosystem of 3 lines
+    pos_solution = []
+    pos_solution.append(Ecosystem(3, 0)) 
+    
+    #Ecosystem of 5 lines
+    #pos_solution.append(Ecosystem(5, 0))
+    
+    #Ecosystem of 7 lines
+    #pos_solution.append(Ecosystem(7, 0))
 
-    while gen < 5: 
-        """Evaluating fitness in population"""
-        for artist in population: 
-            Display.Display(artist.name, artist.script)
-        
-            """Run .py file"""
-            script = artist.name+".py"
-            call(["python3", script])
-            artwork = artist.name + ".png"
-        
-            """Save generated images"""
-            a = image_diff(artwork, artist.name, WSK, "WSK")
-            a.blackened_white()
-        
-            """Compute fitness"""
-            artist.fitness = a.compare()
-        
-        """Organized top to bottom, fittest at top"""    
-        population = sorted(population, key=operator.attrgetter('fitness'))
-        
-        #Pick ten fittest 
-        pool = population[:10]
-        mating_seq = random.sample(range(0,10), 10)
-        
-        #Reproduce offspring, Keep offspring, Mutate offspring
+    #Populate ecosystems with random numbers
+    #Fill up # lines in script
+    for ele in pos_solution: 
+        ele.populate_ecosystem()
+
+
+    """Create artist and script"""
+    count = 1
+    all_scripts = []
     
-        offspring1 = crossover(pool[mating_seq[0]], pool[mating_seq[1]])
-        offspring2 = crossover(pool[mating_seq[2]], pool[mating_seq[3]])
-        offspring3 = crossover(pool[mating_seq[4]], pool[mating_seq[5]])
-        offspring4 = crossover(pool[mating_seq[6]], pool[mating_seq[7]])
-        offspring5 = crossover(pool[mating_seq[8]], pool[mating_seq[9]])
+    #Developing script siwth Create Artist module
+    #all_scripts == pos_solution, by index
+    for ele in pos_solution:
+        name = "Eco" + str(count)
+        all_scripts.append(Create_artist(name, 0, ele.people()))
+        count += 1
     
-        mut_spring1 = mutate(offspring1)
-        mut_spring2 = mutate(offspring2)
-        mut_spring3 = mutate(offspring3)
-        mut_spring4 = mutate(offspring4)
-        mut_spring5 = mutate(offspring5)
+    #Running scripts 
+    for artist in all_scripts: 
+        Display.Display(artist.name, artist.script)
+    
+        """Run .py file"""
+        script = artist.name+".py"
+        call(["python3", script])
+        artwork = artist.name + ".png"
         
-        population.extend((offspring1, offspring2, offspring3, offspring4, offspring5, \
-                           mut_spring1, mut_spring2, mut_spring3, mut_spring4, mut_spring5))
         
-        print ("Generation " + str(gen) + " has concluded.")
-        gen += 1
