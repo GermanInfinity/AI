@@ -1,6 +1,6 @@
-###############################################################################
+##########################################################################
 
-Description: This folder contains all Pytorh tutorials, it serves as a referenc
+Description: This folder contains all Pytorch tutorials, it serves as a reference
 			 and a guide to conducting research with Pytorch. 
 
-###############################################################################
+##########################################################################

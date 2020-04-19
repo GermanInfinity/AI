@@ -2,7 +2,7 @@
 
 """Description: Simple CNN trained and tested on FashionMNIST dataset. 
              (Includes confusion Matrix for evaluating)
-Acknowledgment: Deel Lizard Pytorch tutorial"""
+Acknowledgment: Deep Lizard Pytorch tutorial"""
 
 ###############################################################################
 
@@ -66,7 +66,28 @@ class Network(nn.Module):
         #t = F.softmax(t, dim=1)
 
         return t
-    
+
+def train(optimizer, train_loader):
+    # TRAINING THE MODEL
+    for epoch in range(10): 
+        #At each epoch we train all the batches and update the weights
+        total_loss = 0
+        total_correct = 0
+
+        for batch in train_loader: 
+            images, labels = batch 
+            preds = net(images)
+            loss = F.cross_entropy(preds, labels)
+
+            optimizer.zero_grad() #Clears previous gradients
+            loss.backward()
+            optimizer.step() #Steps in direction of smaller gradient by updating weights
+
+            total_loss += loss.item()
+
+        print ("epoch", epoch, "loss:", total_loss)
+
+        
 def get_all_preds(model, loader):
 	all_preds = torch.tensor([])
     for batch in loader:
