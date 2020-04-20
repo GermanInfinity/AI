@@ -1,10 +1,12 @@
 """
-Description : Implementation of simple perceptron
+Description : Implementation of Layer module for architecutes
+Detail: This layer module has a sigmoid activation function
 """
+
 import torch 
 import torch.nn as nn
 
-class Perceptron():
+class Layer():
     def __init__(self, row, col):
         self.weights = torch.rand((row, col))
 
@@ -33,8 +35,3 @@ class Perceptron():
         print (self.weights)
 
 
-if __name__ == '__main__':
-    neuron = Perceptron(1, 4)
-    inp = torch.tensor([[1], [2], [3]]).float()
-
-    print (neuron.forward(inp, set_bias=True))
